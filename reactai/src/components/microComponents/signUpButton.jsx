@@ -1,6 +1,23 @@
 import React from 'react'
+import { useState } from 'react';
 
-const SignUpButton = ({signUpState, loginState, handleSignUp ,newUsername ,newPassword, newEmail, changeSignUpstate}) => {
+const SignUpButton = ({signUpState, loginState ,newUsername ,newPassword, newEmail, 
+    changeSignUpstate, username, password, email}) => {
+
+    const [error, setError] = useState('')
+
+    //Handling the signup post request
+    const handleSignUp = (e) =>{
+        e.preventDefault();
+
+        if(!username || !password || !email){
+            setError(<p className='pr-2 pb-1 mr-2 ' style={{ color: 'red' }}>Fill Out SignUp Info</p>);
+            console.log(username + ' ' + password + ' ' + email)
+        }else{
+            setError('');
+            changeSignUpstate();
+        }
+    }
   return (
     <div>
         {signUpState && !loginState && (
@@ -16,6 +33,7 @@ const SignUpButton = ({signUpState, loginState, handleSignUp ,newUsername ,newPa
                   type='text'
                   placeholder='Username'
                   name='username'
+                  value={username}
                   onChange={(e) => {newUsername(e.target.value)}}
                   style={{ color: 'white' }}
                 />
@@ -24,6 +42,7 @@ const SignUpButton = ({signUpState, loginState, handleSignUp ,newUsername ,newPa
                   type='password'
                   placeholder='Password'
                   name='password'
+                  value={password}
                   onChange={(e) => {newPassword(e.target.value)}}
                   style={{ color: 'white' }}
                 />
@@ -32,16 +51,18 @@ const SignUpButton = ({signUpState, loginState, handleSignUp ,newUsername ,newPa
                   type='email'
                   placeholder='Email'
                   name='email'
+                  value={email}
                   onChange={(e) => {newEmail(e.target.value)}}
                   style={{ color: 'white' }}
                 />
                 <button
                   className="bg-custom-gradient rounded-lg px-4 py-2 w-20 absolute bottom-3 right-3"
                   type='submit'
-                  onClick={changeSignUpstate}
+                  onClick={handleSignUp}
                 >
                   Submit
                 </button>
+                {error}
               </form>
             </div>
           </div>

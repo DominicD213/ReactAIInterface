@@ -30,18 +30,6 @@ const Login = () => {
     newLoginState(!loginState);
   };
 
-  //Handling the signup post request
-  const handleSignUp = (e) =>{
-    e.preventDefault();
-
-  }
-
-  //Handling the login get request
-  const handleLogin = (e) =>{
-    e.preventDefault();
-
-  }
-
 
   return (
     <div className='mb-2'>
@@ -57,10 +45,14 @@ const Login = () => {
           </div>
         </>
         )} 
-      <SignUpButton signUpState = {signUpState} loginState = {loginState} handleSignUp = {handleSignUp} 
-        newUsername = {newUsername} newPassword = {newPassword} newEmail = {newEmail} changeSignUpstate ={changeSignUpState}/>
-      <LoginButton  signUpState = {signUpState} loginState = {loginState} handleLogin = {handleLogin} 
-        newloginUsername={newloginUsername} newloginPassword={newloginPassword} changeLoginState = {changeLoginState}/>
+      <SignUpButton signUpState = {signUpState} loginState = {loginState}  
+        newUsername = {newUsername} newPassword = {newPassword} newEmail = {newEmail} 
+        changeSignUpstate ={changeSignUpState}
+        username = {username} password = {password} email = {email}/>
+      <LoginButton  signUpState = {signUpState} loginState = {loginState} 
+        newloginUsername={newloginUsername} newloginPassword={newloginPassword} 
+        changeLoginState = {changeLoginState}loginUsername = {loginUsername} 
+        loginPassword = {loginPassword}/>
     </div>
   )
 }

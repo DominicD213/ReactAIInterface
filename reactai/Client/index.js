@@ -16,7 +16,7 @@ const corsOption = {
 };
 
 app.use(cors(corsOption))
-app.use('/', router)
+app.use('/', routes)
 
 
 const port = 4000;
