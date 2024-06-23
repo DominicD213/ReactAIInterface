@@ -4,8 +4,8 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
     username: { type: String, required: true, unique: true }, // Updated to use 'username' instead of 'name'
-    email: { type: String, required: true, unique: true },
     password: { type: String, required: true }, // Added 'password' field
+    email: { type: String, required: true, unique: true },
     entryDate: { type: Date, default: Date.now }
 });
 
@@ -20,13 +20,14 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 }
 
+const User = mongoose.model('User', userSchema, 'Users');
+
 const userQueriesSchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Use ObjectId reference to the User model
     query: { type: String, required: true },
     response: { type: String, required: true }
 });
 
-const User = mongoose.model('User', userSchema, 'users');
 const UserQueries = mongoose.model('UserQueries', userQueriesSchema, 'user_queries');
 
 module.exports = { User, UserQueries };

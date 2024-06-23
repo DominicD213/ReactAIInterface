@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/schema').Users; // Ensure your schema path is correct
+const {User , UserQueries} = require('../models/schema') // Assuming 'users' is the correct model in your schema
 
 router.post('/signup', async (req, res) => {
-    // Extract username, email, and password from request body
-    const { username, email, password } = req.body;
+    const { username, password, email, } = req.body;
 
     try {
         // Check if username or email already exists
@@ -15,47 +14,49 @@ router.post('/signup', async (req, res) => {
         }
 
         // Create new user instance
-        const newUser = new User({ username, email, password });
+        const newUser = new User({ username, password, email });
 
         // Save new user to database
         await newUser.save();
 
         // Return success response
-        res.status(201).send('User created successfully');
+        return res.status(201).send('User created successfully');
     } catch (error) {
-        console.error('Error creating user:', error);
-        res.status(500).send('Error creating user');
+        console.error('Error creating user:', error); // Log detailed error
+        return res.status(500).send('Internal Server Error'); // Send generic error response
     }
 });
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    
+
     try {
+        // Find user by username
         const user = await User.findOne({ username });
 
         if (!user) {
             return res.status(401).send('Username not found');
         }
 
+        // Check if password matches
         const isPasswordValid = await user.comparePassword(password);
 
         if (!isPasswordValid) {
             return res.status(401).send('Invalid password');
         }
 
+        // Store user information in session
         req.session.user = {
             id: user._id,
             username: user.username,
             email: user.email,
         };
 
-        res.status(200).send('Login successful');
+        return res.status(200).send('Login successful');
     } catch (error) {
         console.error('Login error:', error);
-        res.status(500).send('Error logging in');
+        return res.status(500).send('Error logging in');
     }
 });
 
 module.exports = router;
-

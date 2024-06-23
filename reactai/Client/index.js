@@ -2,7 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const routes = require('./routes/routes'); // Adjust the path as needed
+const session = require('express-session');
+const crypto = require('crypto');
+const routes = require('./routes/routes');
 require('dotenv').config();
 
 const app = express();
@@ -17,6 +19,16 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+const secretKey = crypto.randomBytes(32).toString('hex');
+
+app.use(session({
+    secret: secretKey,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
+
 app.use('/', routes);
 
 mongoose.connect(process.env.DB_URI)
