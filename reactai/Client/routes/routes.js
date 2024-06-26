@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {User , UserQueries} = require('../models/schema') // Assuming 'users' is the correct model in your schema
+const { User } = require('../models/schema'); // Assuming 'User' is the correct model in your schema
 
+// Signup route
 router.post('/signup', async (req, res) => {
-    const { username, password, email, } = req.body;
+    const { username, password, email } = req.body;
 
     try {
         // Check if username or email already exists
@@ -27,6 +28,7 @@ router.post('/signup', async (req, res) => {
     }
 });
 
+// Login route
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -57,6 +59,25 @@ router.post('/login', async (req, res) => {
         console.error('Login error:', error);
         return res.status(500).send('Error logging in');
     }
+});
+
+// Session status route
+router.get('/login/session-status', (req, res) => {
+    if (req.session.user) {
+        return res.status(200).json({ active: true, user: req.session.user });
+    } else {
+        return res.status(200).json({ active: false });
+    }
+});
+
+router.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send('Error logging out');
+        }
+        res.clearCookie('connect.sid');
+        return res.status(200).send('Logout successful');
+    });
 });
 
 module.exports = router;

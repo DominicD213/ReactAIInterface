@@ -22,11 +22,13 @@ const LoginButton = ({signUpState, loginState ,newloginUsername , newloginPasswo
           const response = await axios.post('http://localhost:4000/login', {
             username: loginUsername,
             password: loginPassword,
+          }, {
+            withCredentials: true,
           });
     
           if (response.status === 200) {
-            // Login successful, change login state or redirect
             changeLoginState();
+            window.location.reload();
           } else {
             setError(<p className='pr-2 pb-1 ' style={{ color: 'red' }}>Login failed</p>);
           }
